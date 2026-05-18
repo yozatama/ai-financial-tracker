@@ -1,8 +1,19 @@
 import { Elysia } from "elysia";
 import { db } from "./db/setup";
 import { sql } from "drizzle-orm";
+import { userRoute } from "./routes/user-route";
+import { masterRoute } from "./routes/master-route";
+import { userAccountRoute } from "./routes/user-account-route";
+import { transactionRoute } from "./routes/transaction-route";
+import { subscriptionRoute } from "./routes/subscription-route";
 
-const app = new Elysia();
+export const app = new Elysia();
+
+app.use(userRoute);
+app.use(masterRoute);
+app.use(userAccountRoute);
+app.use(transactionRoute);
+app.use(subscriptionRoute);
 
 app.get("/ping", async () => {
   let dbStatus = "connected";
