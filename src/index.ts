@@ -15,6 +15,14 @@ app.use(userAccountRoute);
 app.use(transactionRoute);
 app.use(subscriptionRoute);
 
+app.get("/", () => {
+  return {
+    app: "AI Financial Tracker API",
+    version: "1.0.0",
+    description: "Welcome to the API. Access /ping to check database status.",
+  };
+});
+
 app.get("/ping", async () => {
   let dbStatus = "connected";
   try {
