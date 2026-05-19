@@ -1,66 +1,79 @@
-# Perencanaan Implementasi Frontend & Admin Panel AI Financial Tracker
+# Perencanaan Implementasi Lanjutan (Frontend & Fitur Lanjutan)
 
 ## 1. Ringkasan Tugas
-Tugas ini bertujuan untuk membangun antarmuka pengguna (Frontend) untuk aplikasi **AI Financial Tracker** yang *production-ready*. Pekerjaan ini mencakup pembuatan halaman publik (Landing Page), struktur navigasi utama, serta pembuatan Admin Panel (CMS) untuk mengelola data operasional dan konten website.
+Dokumen ini berisi perencanaan untuk penyempurnaan UI/UX (*User Interface / User Experience*) pada *frontend* dan penambahan fitur lanjutan bagi pengguna. Implementasi ini berfokus pada pengalaman pengguna yang mulus, keamanan otentikasi, dan visualisasi data yang interaktif.
 
-## 2. Spesifikasi Tech Stack
-Pengembangan *frontend* wajib menggunakan tumpukan teknologi berikut:
-*   **Framework:** Next.js (App Router) dengan TypeScript.
-*   **Styling & UI:** Tailwind CSS dan shadcn/ui (untuk komponen UI interaktif).
-*   **Data Fetching & State:** TanStack Query (React Query) dipadukan dengan Axios atau native `fetch`.
-*   **Form Management:** React Hook Form dipadukan dengan Zod untuk validasi skema.
-*   **Icons:** Lucide React.
+## 2. Detail Pekerjaan (Berdasarkan Modul)
 
-## 3. Kebutuhan Fitur & Halaman
+### A. Landing Page (Single Page Application)
+Saat ini *Landing Page* terpisah menjadi beberapa rute. Tugasnya adalah menggabungkannya menjadi satu halaman panjang yang interaktif.
 
-### A. Tata Letak (Layout) & Navigasi Publik
-*   **Header (Navbar):** Berisi logo aplikasi, menu navigasi (Home, About, Pricing, FAQs), dan tombol otentikasi (Login / Sign Up).
-*   **Footer:** Berisi tautan cepat, hak cipta, dan informasi kontak/sosial media.
+1.  **Penggabungan Halaman:**
+    *   Pindahkan konten dari halaman `About`, `Pricing`, dan `FAQs` menjadi *section* di dalam halaman `Home` (`src/app/(public)/page.tsx`).
+    *   Hapus rute individual untuk `/about`, `/pricing`, dan `/faq`.
+2.  **Smooth Scrolling:**
+    *   Ubah tautan (Link) pada `Header` (Navbar) agar mengarah ke ID *section* di halaman yang sama (contoh: `href="#about"`, `href="#pricing"`).
+    *   Gunakan CSS atau library (seperti `framer-motion` atau fitur native browser `scroll-behavior: smooth`) untuk memberikan efek animasi *scrolling*/*dragging* yang mulus saat menu diklik.
+3.  **Lightweight Animations:**
+    *   Tambahkan animasi *fade-in* atau *slide-up* pada elemen saat di-*scroll* (bisa menggunakan `framer-motion` atau Tailwind CSS plugins).
+    *   Pastikan animasi tidak memberatkan performa (*bundle size* kecil dan tidak menyebabkan *layout shift* yang parah).
 
-### B. Halaman Publik (Landing Pages)
-Konten pada halaman-halaman ini harus relevan dengan produk "AI Financial Tracker":
-1.  **Home (`/`):** Halaman utama yang menonjolkan fitur pencatatan otomatis via AI (teks, suara, struk), dukungan multi-dompet, dan ajakan (*Call to Action*) untuk mencoba secara gratis.
-2.  **About (`/about`):** Halaman yang menjelaskan visi misi aplikasi, bagaimana AI mempermudah pencatatan keuangan, dan informasi tim/produk.
-3.  **Pricing (`/pricing`):** Halaman perbandingan paket langganan (Free, Pro, Pro Max) yang menampilkan batas kuota dan fitur masing-masing paket.
-4.  **FAQs (`/faq`):** Halaman tanya jawab seputar cara kerja AI *parsing*, keamanan data, dan mekanisme berlangganan.
+### B. Otentikasi (Login & Register)
+Membangun halaman dan logika otentikasi yang aman dan lengkap.
 
-### C. Admin Panel (Dashboard)
-Halaman khusus dengan *layout* terpisah (misalnya di *path* `/admin`) yang digunakan pengelola aplikasi untuk mengatur data dan konten. Halaman ini meliputi:
-1.  **Content Management:**
-    *   **Manage Pricing:** Antarmuka untuk mengubah harga dan deskripsi fitur dari tiap paket (Free, Pro, Pro Max).
-    *   **Manage FAQs:** Antarmuka untuk Menambah, Mengubah, dan Menghapus daftar pertanyaan dan jawaban.
-    *   **Manage About:** Antarmuka untuk mengubah teks konten pada halaman About.
-    *(Catatan: Jika API backend untuk pengaturan konten ini belum tersedia, siapkan UI-nya terlebih dahulu dengan data statis / mock yang siap dihubungkan ke API nantinya).*
-2.  **Master Data & Operational CRUD:**
-    *   **Users:** Tabel untuk melihat daftar pengguna, mengubah data pengguna, atau menghapus pengguna.
-    *   **Transactions:** Tabel untuk melihat seluruh riwayat transaksi (global/per user), dan fungsi hapus/edit (jika diperlukan untuk admin).
-    *   **Categories:** CRUD untuk Master Data kategori transaksi (Income/Expense).
-    *   **Wallets:** CRUD untuk Master Data ketersediaan dompet/bank.
+1.  **Halaman UI:**
+    *   Buat halaman `/login` dan `/register` dengan desain yang konsisten dengan estetika utama (gelap, aksen neon).
+    *   Pastikan tombol Login & Sign Up di Header mengarah ke halaman ini agar tidak terjadi *error 404*.
+2.  **Keamanan & Anti-Spam:**
+    *   **Register:** Terapkan pembatasan (*rate limiting*) atau sistem anti-spam (contoh: Google reCAPTCHA v3 atau Cloudflare Turnstile) untuk mencegah registrasi bot otomatis. *(Perlu penyesuaian di sisi backend juga).*
+    *   **Login:** Terapkan mekanisme *Maximum Wrong Password* (misal: blokir akun sementara selama 15 menit setelah 5 kali gagal login).
+3.  **Social Login (OAuth):**
+    *   Siapkan tombol "Login with Google" dan "Login with Apple" di halaman otentikasi.
+    *   Gunakan library seperti `next-auth` (Auth.js) atau layanan eksternal (seperti Supabase Auth / Clerk / Firebase) untuk mempermudah integrasi jika diizinkan, atau buat integrasi OAuth manual ke backend Elysia.
 
-## 4. Tahapan Implementasi (Panduan Pengerjaan)
+### C. Aktivitas Pengguna (User Activity Area)
+Membangun antarmuka utama setelah pengguna berhasil *login*. Buat *layout* khusus pengguna (misal di `/dashboard`).
 
-Instruksi ini dirancang agar dapat dikerjakan secara bertahap oleh *junior programmer* atau *AI model*:
+1.  **Manajemen Dompet (Wallet CRUD):**
+    *   Antarmuka untuk melihat daftar dompet.
+    *   Fungsi untuk Menambah (*Add*), Mengubah (*Edit*), dan Menghapus (*Delete*) dompet.
+2.  **Manajemen Transaksi (Transaction CRUD):**
+    *   Tabel atau daftar riwayat transaksi.
+    *   Formulir manual untuk *Add/Edit/Delete* transaksi.
+3.  **Chat Form (AI Input):**
+    *   Buat komponen interaktif berbentuk seperti "Chat" untuk menginput transaksi secara otomatis via AI.
+    *   Dukung 3 jenis input:
+        *   **Teks:** Ketik kalimat (contoh: "Beli bensin 20rb").
+        *   **Voice (Suara):** Integrasikan Web Speech API untuk merekam suara dan mengubahnya menjadi teks sebelum dikirim ke AI.
+        *   **Gambar/Struk (Image):** Fitur *upload* gambar struk (integrasikan dengan Gemini Vision API di backend untuk membaca struk).
 
-**Tahap 1: Inisialisasi Proyek**
-1. Lakukan inisialisasi proyek Next.js baru dengan perintah `npx create-next-app@latest frontend-app`.
-2. Lakukan instalasi dependensi utama: Tailwind CSS, shadcn/ui, TanStack Query, React Hook Form, dan Zod.
-3. Setup struktur direktori yang rapi (misalnya memisahkan folder `components`, `app`, `lib`, dan `hooks`).
+### D. Berlangganan & Pembayaran (Subscription & Checkout)
+1.  **Halaman Pemilihan Paket:**
+    *   Buat halaman di dalam area pengguna (contoh: `/dashboard/upgrade`) yang menampilkan pilihan paket berlangganan.
+2.  **Checkout & Billing Information:**
+    *   Buat formulir (dengan validasi Zod) untuk mengumpulkan *Billing Information* (Nama, Alamat, No. Telepon, dll) sebelum pembayaran.
+3.  **Integrasi Xendit:**
+    *   Hubungkan proses *checkout* dengan API Backend untuk menghasilkan tautan tagihan (*Invoice URL*) dari Xendit.
+    *   Arahkan pengguna ke halaman pembayaran Xendit.
 
-**Tahap 2: Pembuatan Layout Publik & Halaman Statis**
-1. Buat komponen `Header` dan `Footer`. Pastikan responsif di perangkat *mobile* maupun *desktop*.
-2. Buat halaman **Home**, **About**, **Pricing**, dan **FAQs**. Gunakan komponen shadcn/ui (seperti *Cards*, *Accordions* untuk FAQ, dan *Buttons*) agar desain terlihat profesional.
+### E. Dashboard Analytics (Visualisasi Data)
+1.  **Visualisasi Pemasukan/Pengeluaran:**
+    *   Gunakan library grafik interaktif seperti `recharts` atau `chart.js` (yang sering dipasangkan dengan shadcn/ui).
+    *   Buat *Bar Chart* atau *Line Chart* yang memiliki animasi saat dimuat.
+    *   Sediakan filter waktu: Per Hari, Per Bulan, Per Tahun.
+2.  **Kategori Pengeluaran (Top Spending):**
+    *   Buat *Donut Chart* atau *Pie Chart* untuk menampilkan kategori mana yang paling banyak menghabiskan uang.
+3.  **Highlight Ringkasan:**
+    *   Tampilkan kartu ringkasan untuk Total Pemasukan (*Income*) dan Total Pengeluaran (*Expense*) bulan ini.
 
-**Tahap 3: Persiapan Layout Admin Panel**
-1. Buat *layout* khusus untuk admin (contoh: `app/admin/layout.tsx`) yang memiliki *Sidebar* navigasi di sisi kiri dan area konten di sisi kanan.
-2. Buat menu navigasi di *Sidebar* yang mengarah ke bagian Content Management dan Operational CRUD.
+### F. Highlight Saldo Total (Total Balance)
+*   Kalkulasi total saldo dari seluruh *wallets* yang dimiliki pengguna.
+*   Tampilkan informasi "Total Balance" ini di lokasi yang sangat terlihat (rekomendasi: di **Sidebar navigasi** bagian atas, atau di **Header Dasbor** pengguna) agar pengguna selalu tahu posisi keuangannya secara instan.
 
-**Tahap 4: Implementasi Halaman Admin Panel**
-1. **Content Management UI:** Bangun antarmuka formulir (menggunakan React Hook Form + Zod) untuk pengaturan Pricing, FAQs, dan About.
-2. **Master Data CRUD:** 
-    * Gunakan komponen *Data Table* (bisa memanfaatkan library tambahan seperti `@tanstack/react-table` yang terintegrasi dengan shadcn/ui) untuk menampilkan Users, Transactions, Categories, dan Wallets.
-    * Integrasikan tabel-tabel ini dengan endpoint API Backend yang sudah tersedia di tahap sebelumnya menggunakan React Query untuk proses *fetching*, *caching*, dan *mutations*.
+---
 
-**Tahap 5: Finalisasi & Integrasi API**
-1. Hubungkan form otentikasi (Login/Register) di frontend dengan API backend untuk mendapatkan JWT.
-2. Simpan token JWT (bisa menggunakan *cookies* atau *local storage*) dan gunakan sebagai *header* `Authorization` saat mengakses API yang diproteksi.
-3. Pastikan fitur *logout* berfungsi dengan menghapus token dari sisi *client* dan memanggil API *logout* di *backend*.
+## Instruksi untuk Implementator (Junior Dev / AI)
+1.  **Kerjakan secara bertahap (Incremental):** Mulailah dari perombakan *Landing Page*, kemudian berlanjut ke sistem *Auth*, lalu UI *Dashboard* pengguna, dan terakhir integrasi pembayaran/analitik.
+2.  **Gunakan Komponen yang Ada:** Manfaatkan komponen dari `shadcn/ui` sebanyak mungkin untuk menjaga konsistensi desain (terutama gaya *minimalist dark mode* dengan aksen neon).
+3.  **Fokus pada UI/UX terlebih dahulu:** Jika integrasi backend (misal: anti-spam atau Xendit) terasa rumit, bangun UI-nya (*mockup*) terlebih dahulu agar secara visual sudah sempurna, baru kemudian sambungkan dengan API (Axios/React Query).
+4.  Gunakan `framer-motion` jika diperlukan animasi yang kompleks, tetapi pastikan animasi terasa responsif ("sat-set").
