@@ -4,12 +4,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, ArrowRight, Globe, Apple } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -87,7 +88,7 @@ export default function LoginPage() {
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between items-center ml-1">
-                  <Label htmlFor="password" senior-class="font-bold">Password</Label>
+                  <Label htmlFor="password">Password</Label>
                   <Link href="#" className="text-xs text-primary font-bold hover:underline">Forgot password?</Link>
                 </div>
                 <Input 
@@ -114,20 +115,29 @@ export default function LoginPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <Button variant="outline" className="rounded-full h-12 font-bold border-white/10 hover:bg-white/5">
+              <Button 
+                variant="outline" 
+                className="rounded-full h-12 font-bold border-white/10 hover:bg-white/5"
+                onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+              >
                 <Globe className="mr-2 h-4 w-4" /> Google
               </Button>
-              <Button variant="outline" className="rounded-full h-12 font-bold border-white/10 hover:bg-white/5">
+              <Button 
+                variant="outline" 
+                className="rounded-full h-12 font-bold border-white/10 hover:bg-white/5"
+                onClick={() => signIn("apple", { callbackUrl: "/dashboard" })}
+              >
                 <Apple className="mr-2 h-4 w-4" /> Apple
               </Button>
             </div>
+
+            <div className="pt-6 text-center">
+              <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+                Don't have an account?{" "}
+                <Link href="/register" className="text-primary hover:underline">Register now</Link>
+              </p>
+            </div>
           </CardContent>
-          <CardFooter className="p-8 pt-0 flex justify-center">
-            <p className="text-sm text-muted-foreground font-medium">
-              Don't have an account?{" "}
-              <Link href="/register" className="text-primary font-bold hover:underline">Register now</Link>
-            </p>
-          </CardFooter>
         </Card>
       </motion.div>
     </div>

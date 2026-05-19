@@ -4,13 +4,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, ArrowRight, Globe, Apple } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
@@ -113,6 +114,12 @@ export default function RegisterPage() {
               </Button>
             </form>
 
+            <p className="text-[10px] text-center text-muted-foreground font-medium px-6 leading-relaxed">
+              By registering, you agree to our{" "}
+              <Link href="#" className="text-primary hover:underline font-bold">Terms</Link> and{" "}
+              <Link href="#" className="text-primary hover:underline font-bold">Privacy Policy</Link>
+            </p>
+
             <div className="relative py-4">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-white/5"></span>
@@ -123,27 +130,29 @@ export default function RegisterPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <Button variant="outline" className="rounded-full h-12 font-bold border-white/10 hover:bg-white/5">
+              <Button 
+                variant="outline" 
+                className="rounded-full h-12 font-bold border-white/10 hover:bg-white/5"
+                onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+              >
                 <Globe className="mr-2 h-4 w-4" /> Google
               </Button>
-              <Button variant="outline" className="rounded-full h-12 font-bold border-white/10 hover:bg-white/5">
+              <Button 
+                variant="outline" 
+                className="rounded-full h-12 font-bold border-white/10 hover:bg-white/5"
+                onClick={() => signIn("apple", { callbackUrl: "/dashboard" })}
+              >
                 <Apple className="mr-2 h-4 w-4" /> Apple
               </Button>
             </div>
+
+            <div className="pt-6 text-center border-t border-white/5 mt-4">
+              <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-2">
+                Already have an account?{" "}
+                <Link href="/login" className="text-primary hover:underline">Log in</Link>
+              </p>
+            </div>
           </CardContent>
-          <CardFooter className="p-8 pt-0 flex justify-center text-center">
-            <p className="text-xs text-muted-foreground font-medium px-4">
-              By registering, you agree to our{" "}
-              <Link href="#" className="text-primary hover:underline">Terms of Service</Link> and{" "}
-              <Link href="#" className="text-primary hover:underline">Privacy Policy</Link>
-            </p>
-          </CardFooter>
-          <div className="p-8 pt-0 flex justify-center border-t border-white/5 mt-4">
-             <p className="text-sm text-muted-foreground font-medium mt-6">
-              Already have an account?{" "}
-              <Link href="/login" className="text-primary font-bold hover:underline">Log in</Link>
-            </p>
-          </div>
         </Card>
       </motion.div>
     </div>
