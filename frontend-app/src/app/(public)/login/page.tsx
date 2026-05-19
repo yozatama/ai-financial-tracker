@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, ArrowRight, Chrome, Apple } from "lucide-react";
+import { Sparkles, ArrowRight, Globe, Apple } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -78,7 +78,7 @@ export default function LoginPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <Button variant="outline" className="rounded-full h-12 font-bold border-white/10 hover:bg-white/5">
-                <Chrome className="mr-2 h-4 w-4" /> Google
+                <Globe className="mr-2 h-4 w-4" /> Google
               </Button>
               <Button variant="outline" className="rounded-full h-12 font-bold border-white/10 hover:bg-white/5">
                 <Apple className="mr-2 h-4 w-4" /> Apple
