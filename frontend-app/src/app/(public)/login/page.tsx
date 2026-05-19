@@ -8,15 +8,43 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Sparkles, ArrowRight, Globe, Apple } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { api } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Logic will be added here
-    setTimeout(() => setLoading(false), 2000);
+    setError("");
+
+    try {
+      const response = await api.post("/auth/login", formData);
+      
+      if (response.data.status === "success") {
+        localStorage.setItem("token", response.data.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.data.user));
+        router.push("/dashboard");
+      } else {
+        setError(response.data.message || "Login failed");
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   return (
@@ -39,6 +67,11 @@ export default function LoginPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="p-8 pt-4 space-y-4">
+            {error && (
+              <div className="bg-destructive/10 border border-destructive/20 text-destructive text-xs font-bold p-3 rounded-xl text-center">
+                {error}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email" className="font-bold ml-1">Email</Label>
@@ -47,6 +80,8 @@ export default function LoginPage() {
                   type="email" 
                   placeholder="name@example.com" 
                   required 
+                  value={formData.email}
+                  onChange={handleChange}
                   className="rounded-full h-12 bg-background/50 border-white/10 px-6 focus-visible:ring-primary"
                 />
               </div>
@@ -59,6 +94,8 @@ export default function LoginPage() {
                   id="password" 
                   type="password" 
                   required 
+                  value={formData.password}
+                  onChange={handleChange}
                   className="rounded-full h-12 bg-background/50 border-white/10 px-6 focus-visible:ring-primary"
                 />
               </div>

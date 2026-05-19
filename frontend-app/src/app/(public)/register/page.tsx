@@ -8,15 +8,44 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Sparkles, ArrowRight, Globe, Apple } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { api } from "@/lib/api";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: ""
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Logic will be added here
-    setTimeout(() => setLoading(false), 2000);
+    setError("");
+
+    try {
+      const response = await api.post("/auth/register", formData);
+      
+      if (response.data.status === "success") {
+        toast.success("Account created successfully! Please log in.");
+        router.push("/login");
+      } else {
+        setError(response.data.message || "Registration failed");
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Something went wrong. Make sure backend is running.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   return (
@@ -39,6 +68,11 @@ export default function RegisterPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="p-8 pt-4 space-y-4">
+            {error && (
+              <div className="bg-destructive/10 border border-destructive/20 text-destructive text-xs font-bold p-3 rounded-xl text-center">
+                {error}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name" className="font-bold ml-1">Full Name</Label>
@@ -46,6 +80,8 @@ export default function RegisterPage() {
                   id="name" 
                   placeholder="John Doe" 
                   required 
+                  value={formData.name}
+                  onChange={handleChange}
                   className="rounded-full h-12 bg-background/50 border-white/10 px-6 focus-visible:ring-primary"
                 />
               </div>
@@ -56,6 +92,8 @@ export default function RegisterPage() {
                   type="email" 
                   placeholder="name@example.com" 
                   required 
+                  value={formData.email}
+                  onChange={handleChange}
                   className="rounded-full h-12 bg-background/50 border-white/10 px-6 focus-visible:ring-primary"
                 />
               </div>
@@ -65,6 +103,8 @@ export default function RegisterPage() {
                   id="password" 
                   type="password" 
                   required 
+                  value={formData.password}
+                  onChange={handleChange}
                   className="rounded-full h-12 bg-background/50 border-white/10 px-6 focus-visible:ring-primary"
                 />
               </div>

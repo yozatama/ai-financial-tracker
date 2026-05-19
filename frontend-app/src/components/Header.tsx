@@ -1,8 +1,18 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { Sparkles, LayoutDashboard } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function Header() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
   return (
     <header className="border-b border-white/5 sticky top-0 bg-background/80 backdrop-blur-xl z-50">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
@@ -21,12 +31,22 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link href="/login">
-            <Button variant="ghost" className="font-bold rounded-full px-6">Login</Button>
-          </Link>
-          <Link href="/register">
-            <Button className="font-bold rounded-full px-6 bg-primary text-background hover:bg-primary/90">Sign Up</Button>
-          </Link>
+          {isLoggedIn ? (
+            <Link href="/dashboard">
+              <Button className="font-bold rounded-full px-6 bg-primary text-background hover:bg-primary/90 gap-2">
+                <LayoutDashboard className="w-4 h-4" /> Dashboard
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link href="/login">
+                <Button variant="ghost" className="font-bold rounded-full px-6">Login</Button>
+              </Link>
+              <Link href="/register">
+                <Button className="font-bold rounded-full px-6 bg-primary text-background hover:bg-primary/90">Sign Up</Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

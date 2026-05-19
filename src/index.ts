@@ -1,4 +1,5 @@
 import { Elysia } from "elysia";
+import { cors } from "@elysiajs/cors";
 import { db } from "./db/setup";
 import { sql } from "drizzle-orm";
 import { userRoute } from "./routes/user-route";
@@ -9,6 +10,7 @@ import { subscriptionRoute } from "./routes/subscription-route";
 
 export const app = new Elysia();
 
+app.use(cors());
 app.use(userRoute);
 app.use(masterRoute);
 app.use(userAccountRoute);

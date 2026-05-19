@@ -85,7 +85,14 @@ export function UserSidebar() {
             <Settings className="h-5 w-5 text-muted-foreground" />
             Settings
           </button>
-          <button className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-destructive hover:bg-destructive/10 transition-all">
+          <button 
+            onClick={() => {
+              localStorage.removeItem("token");
+              localStorage.removeItem("user");
+              window.location.href = "/";
+            }}
+            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-destructive hover:bg-destructive/10 transition-all"
+          >
             <LogOut className="h-5 w-5" />
             Logout
           </button>
